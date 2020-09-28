@@ -9,8 +9,4 @@ package_list <- c(
   "sp")
 
 # install packages
-invisible(lapply(package_list, function(x){
-  print(x)
-  install.packages(x)
-  })
-)
+install.packages(package_list)

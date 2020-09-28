@@ -24,13 +24,13 @@ library(mapview)
 
 #' import EAs
 #' read_sf = read in simple features - works with shapefiles, csvs, etc.
-hotspots <- read_sf(dsn = "Data", layer = "enumeration_areas")
+hotspots <- read_sf(dsn = "data", layer = "enumeration_areas")
 str(hotspots)
 head(hotspots)
 
 #' look at CRS
 st_crs(hotspots)
-st_set_crs(hotspots, 4326) # example of estting to lat lon CRS
+hotspots <- st_set_crs(hotspots, 4326) # example of estting to lat lon CRS
 
 #' import survey data and convert it to a sf object
 survey <- read.csv("data/survey.csv")
@@ -73,6 +73,14 @@ basemap %>%
 survey_hs <- survey_sf %>%
   st_join(hotspots, left = TRUE) %>%
   mutate(in_ea = if_else(is.na(hs_name), "No", "Yes"))
+
+#' alternative method
+# library(matrixStats)
+# dist <- st_distance(survey_sf, hotspots) %>%
+#   rowMins()
+# survey_hs <- cbind(survey_sf, dist) %>%
+#   mutate(in_ea = if_else(dist > 0, "No", "Yes"))
+
 
 # final map
 survey_color <- colorFactor(c("Red", "Green"), domain = c("No", "Yes")) 
